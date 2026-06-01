@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +40,9 @@ public class ProductController {
 	private final ProductService productService;
 	private final String UPLOAD_DIR = "./uploads/";
 
+	@Value("${app.server.url}")
+	private String serverUrl;
+
 	public ProductController(ProductService productService) {
 		this.productService = productService;
 	}
@@ -65,7 +69,7 @@ public class ProductController {
 		Path filePath = uploadPath.resolve(uniqueFileName);
 		Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-		String fileUrl = "http://localhost:8080/uploads/" + uniqueFileName;
+		String fileUrl = serverUrl + "/uploads/" + uniqueFileName;
 		product.setImageUrl(fileUrl);
 
 		Product savedProduct = productService.saveProduct(product);

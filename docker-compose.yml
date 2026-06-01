@@ -13,6 +13,28 @@ services:
       - "3307:3306"  
     volumes:
       - mysql_data:/var/lib/mysql
+    networks:
+      - parabola-network
+
+  parabola-app:
+    build: .
+    container_name: parabola-backend-app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=parabola-db  
+      - DB_PORT=3306         
+      - SERVER_HOST=localhost 
+    volumes:
+      - ./uploads:/app/uploads 
+    depends_on:
+      - parabola-db
+    networks:
+      - parabola-network
 
 volumes:
   mysql_data:
+
+networks:
+  parabola-network:
+    driver: bridge
