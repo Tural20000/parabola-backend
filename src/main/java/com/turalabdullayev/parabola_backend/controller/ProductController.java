@@ -38,7 +38,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class ProductController {
 
 	private final ProductService productService;
-	private final String UPLOAD_DIR = "./uploads/";
+	private final String UPLOAD_DIR = "/app/uploads/";
 
 	@Value("${app.server.url}")
 	private String serverUrl;
@@ -58,7 +58,10 @@ public class ProductController {
 
 		Path uploadPath = Paths.get(UPLOAD_DIR);
 		if (!Files.exists(uploadPath)) {
-			Files.createDirectories(uploadPath);
+			uploadPath = Paths.get("./uploads/");
+			if (!Files.exists(uploadPath)) {
+				Files.createDirectories(uploadPath);
+			}
 		}
 
 		String originalFileName = file.getOriginalFilename();
